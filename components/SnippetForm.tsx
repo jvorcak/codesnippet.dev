@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
@@ -6,27 +6,45 @@ import { Snippet } from '../types'
 
 type FormData = Pick<Snippet, 'content' | 'title'>
 
-const SnippetForm = () => {
+const SnippetForm: FC<{
+  snippetId?: Snippet['id']
+  defaultValues: FormData
+}> = ({ defaultValues, snippetId }) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormData>()
+  } = useForm<FormData>({
+    defaultValues,
+  })
 
   const onSubmit = async (formData: FormData) => {
-    const { data, error } = await supabaseClient.from('snippets').insert([
-      {
-        title: formData.title,
-        content: formData.content,
-        slug: slug(formData.title as string),
-      },
-    ])
-
-    console.log(data)
+    if (snippetId) {
+      const { data, error } = await supabaseClient
+        .from('snippets')
+        .update({
+          title: formData.title,
+          content: formData.content,
+          slug: slug(formData.title as string),
+        })
+        .match({
+          id: snippetId,
+        })
+      console.log({
+        data,
+        error,
+      })
+    } else {
+      const { data, error } = await supabaseClient.from('snippets').insert([
+        {
+          title: formData.title,
+          content: formData.content,
+          slug: slug(formData.title as string),
+        },
+      ])
+    }
   }
-
-  console.log(watch('content')) // watch input value by passing the name of it
 
   return (
     <div>

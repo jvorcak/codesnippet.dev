@@ -6,13 +6,14 @@ import { NextPageWithLayout } from '../_app'
 import { Snippet } from '../../types'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
 import Link from 'next/link'
+import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
 
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
   const { user } = useUser()
   return (
     <div>
       {JSON.stringify(snippet)}
-      {user?.id === snippet?.author && (
+      {user && snippet && user.id === snippet.author && (
         <Link href={`/edit/${snippet.id}`}>Edit</Link>
       )}
     </div>
@@ -23,20 +24,7 @@ Slug.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.query.id as string
-
-  const { data: snippet, error } = await supabaseClient
-    .from('snippets')
-    .select()
-    .eq('id', id)
-    .single()
-
-  return {
-    props: {
-      snippet,
-    },
-  }
-}
+export const getServerSideProps: GetServerSideProps =
+  getServerSidePropsWithSnippet
 
 export default Slug

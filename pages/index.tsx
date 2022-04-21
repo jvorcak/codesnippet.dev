@@ -17,9 +17,7 @@ const Home: NextPageWithLayout<{ snippets: Snippet[] }> = ({ snippets }) => {
       <ul>
         {snippets.map((snippet: Snippet) => (
           <li key={snippet.id}>
-            <Link href={`/${snippet.id}/${snippet.slug}`}>
-              {snippet.content}
-            </Link>
+            <Link href={`/${snippet.id}/${snippet.slug}`}>{snippet.title}</Link>
           </li>
         ))}
       </ul>
