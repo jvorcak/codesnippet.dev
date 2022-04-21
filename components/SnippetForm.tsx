@@ -1,48 +1,52 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
 import { Snippet } from '../types'
+import Button from './Button'
+import { PlusIcon } from '@heroicons/react/outline'
 
 type FormData = Pick<Snippet, 'content' | 'title'>
 
 const SnippetForm: FC<{
   snippetId?: Snippet['id']
-  defaultValues: FormData
+  defaultValues?: FormData
 }> = ({ defaultValues, snippetId }) => {
+  const [loading, setLoading] = useState(false)
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues,
   })
 
   const onSubmit = async (formData: FormData) => {
-    if (snippetId) {
-      const { data, error } = await supabaseClient
-        .from('snippets')
-        .update({
-          title: formData.title,
-          content: formData.content,
-          slug: slug(formData.title as string),
-        })
-        .match({
-          id: snippetId,
-        })
-      console.log({
-        data,
-        error,
-      })
-    } else {
-      const { data, error } = await supabaseClient.from('snippets').insert([
-        {
-          title: formData.title,
-          content: formData.content,
-          slug: slug(formData.title as string),
-        },
-      ])
+    setLoading(true)
+    try {
+      if (snippetId) {
+        const { data, error } = await supabaseClient
+          .from('snippets')
+          .update({
+            title: formData.title,
+            content: formData.content,
+            slug: slug(formData.title as string),
+          })
+          .match({
+            id: snippetId,
+          })
+      } else {
+        const { data, error } = await supabaseClient.from('snippets').insert([
+          {
+            title: formData.title,
+            content: formData.content,
+            slug: slug(formData.title as string),
+          },
+        ])
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -57,7 +61,9 @@ const SnippetForm: FC<{
         <textarea {...register('content', { required: true })} />
         {/* errors will return when field validation fails  */}
         {errors.content && <span>This field is required</span>}
-        <button type="submit">Submit</button>
+        <Button type="submit" icon={PlusIcon} loading={loading}>
+          Submit
+        </Button>
       </form>
     </div>
   )

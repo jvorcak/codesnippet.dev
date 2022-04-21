@@ -15,7 +15,7 @@ const Home: NextPageWithLayout<{ snippets: Snippet[] }> = ({ snippets }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ul>
-        {snippets.map((snippet: Snippet) => (
+        {snippets?.map((snippet: Snippet) => (
           <li key={snippet.id}>
             <Link href={`/${snippet.id}/${snippet.slug}`}>{snippet.title}</Link>
           </li>

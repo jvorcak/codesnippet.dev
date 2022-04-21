@@ -6,6 +6,13 @@ import classNames from 'classnames'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import Link from 'next/link'
+import Button from './Button'
+import {
+  BeakerIcon,
+  CollectionIcon,
+  MailIcon,
+  PlusIcon,
+} from '@heroicons/react/solid'
 
 const navigation: Array<{
   name: string
@@ -46,13 +53,9 @@ const Layout: FC<{ children: ReactChild | ReactChild[] }> = ({ children }) => {
                   </div>
                 </div>
                 <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                  {/*<button*/}
-                  {/*  type="button"*/}
-                  {/*  className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"*/}
-                  {/*>*/}
-                  {/*  <span className="sr-only">New</span>*/}
-                  {/*  <PlusIcon className="h-6 w-6" aria-hidden="true" />*/}
-                  {/*</button>*/}
+                  <Button as="a" href="/new" nextLink icon={BeakerIcon}>
+                    New Snippet
+                  </Button>
 
                   {/* Profile dropdown */}
                   {!user && !isLoading ? (

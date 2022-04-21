@@ -7,6 +7,8 @@ import { Snippet } from '../../types'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
 import Link from 'next/link'
 import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
+import { PencilAltIcon, PlusIcon } from '@heroicons/react/solid'
+import Button from '../../components/Button'
 
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
   const { user } = useUser()
@@ -14,7 +16,14 @@ const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
     <div>
       {JSON.stringify(snippet)}
       {user && snippet && user.id === snippet.author && (
-        <Link href={`/edit/${snippet.id}`}>Edit</Link>
+        <Button
+          as="a"
+          href={`/edit/${snippet.id}`}
+          nextLink
+          icon={PencilAltIcon}
+        >
+          Edit
+        </Button>
       )}
     </div>
   )
