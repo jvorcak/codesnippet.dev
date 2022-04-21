@@ -7,8 +7,9 @@ import { useUser } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 
 const navigation = [
+  { name: 'Home', href: '/', current: true },
   { name: 'Login', href: '/login', current: true },
-  { name: 'Profile', href: '/profile', current: true },
+  { name: 'New', href: '/new', current: true },
 ]
 
 const Layout: FC<{ children: ReactChild | ReactChild[] }> = ({ children }) => {
@@ -163,13 +164,7 @@ const Layout: FC<{ children: ReactChild | ReactChild[] }> = ({ children }) => {
       </Disclosure>
 
       <div className="py-10">
-        <header>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold leading-tight text-gray-900">
-              Dashboard
-            </h1>
-          </div>
-        </header>
+        <header></header>
         <main>
           <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
             {/* Replace with your content */}

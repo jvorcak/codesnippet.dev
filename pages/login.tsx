@@ -2,7 +2,6 @@ import { useUser, Auth } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { ReactElement, useEffect, useState } from 'react'
 import Layout from '../components/Layout'
-import Home from './index'
 
 const LoginPage = () => {
   const { user, error } = useUser()
@@ -27,6 +26,7 @@ const LoginPage = () => {
           providers={['twitter']}
           socialLayout="horizontal"
           socialButtonSize="xlarge"
+          // redirectTo={process.env.VERCEL_URL}
         />
       </>
     )
