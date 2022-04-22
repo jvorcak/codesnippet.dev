@@ -7,12 +7,7 @@ import { useUser } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import Link from 'next/link'
 import Button from './Button'
-import {
-  BeakerIcon,
-  CollectionIcon,
-  MailIcon,
-  PlusIcon,
-} from '@heroicons/react/solid'
+import { BeakerIcon } from '@heroicons/react/solid'
 
 const navigation: Array<{
   name: string
@@ -21,7 +16,7 @@ const navigation: Array<{
 }> = []
 
 const Layout: FC<{ children: ReactChild | ReactChild[] }> = ({ children }) => {
-  const { user, error, isLoading } = useUser()
+  const { user, isLoading } = useUser()
 
   return (
     <div className="min-h-full">

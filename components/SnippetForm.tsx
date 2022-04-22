@@ -5,6 +5,7 @@ import slug from 'slug'
 import { Snippet } from '../types'
 import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
+import { useRouter } from 'next/router'
 
 type FormData = Pick<Snippet, 'content' | 'title'>
 
@@ -13,6 +14,7 @@ const SnippetForm: FC<{
   defaultValues?: FormData
 }> = ({ defaultValues, snippetId }) => {
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const {
     register,
@@ -37,13 +39,19 @@ const SnippetForm: FC<{
             id: snippetId,
           })
       } else {
-        const { data, error } = await supabaseClient.from('snippets').insert([
-          {
-            title: formData.title,
-            content: formData.content,
-            slug: slug(formData.title as string),
-          },
-        ])
+        const { data, error } = await supabaseClient
+          .from('snippets')
+          .insert([
+            {
+              title: formData.title,
+              content: formData.content,
+              slug: slug(formData.title as string),
+            },
+          ])
+          .single()
+        if (data?.id) {
+          router.push(`/${data.id}/${data.slug}`)
+        }
       }
     } finally {
       setLoading(false)

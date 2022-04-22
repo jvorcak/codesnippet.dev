@@ -5,9 +5,8 @@ import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { NextPageWithLayout } from '../_app'
 import { Snippet } from '../../types'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
-import Link from 'next/link'
 import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
-import { PencilAltIcon, PlusIcon } from '@heroicons/react/solid'
+import { PencilAltIcon } from '@heroicons/react/solid'
 import Button from '../../components/Button'
 
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {

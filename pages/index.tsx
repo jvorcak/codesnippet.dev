@@ -30,7 +30,7 @@ Home.getLayout = function getLayout(page: ReactElement) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { user, token } = await supabaseClient.auth.api.getUserByCookie(req)
+  const { token } = await supabaseClient.auth.api.getUserByCookie(req)
   if (token) {
     supabaseClient.auth.setAuth(token)
   }
@@ -38,8 +38,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { data: snippets, error } = await supabaseClient
     .from('snippets')
     .select()
-
-  console.log({ snippets, error })
+    .order('created_at', { ascending: false })
 
   return {
     props: {
