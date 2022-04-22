@@ -9,19 +9,19 @@ import { Snippet } from '../types'
 
 const Home: NextPageWithLayout<{ snippets: Snippet[] }> = ({ snippets }) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <main>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ul>
+      <ul className="w-full grid grid-cols-2">
         {snippets?.map((snippet: Snippet) => (
-          <li key={snippet.id}>
-            <Link href={`/${snippet.id}/${snippet.slug}`}>{snippet.title}</Link>
+          <li key={snippet.id} className="border border-red-200 m-2 h-72">
+            <Link href={`/${snippet.id}/${snippet.slug}`}><a className="w-full h-full block">{snippet.title}</a></Link>
           </li>
         ))}
       </ul>
-    </div>
+    </main>
   )
 }
 
