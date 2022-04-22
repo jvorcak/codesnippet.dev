@@ -1,11 +1,12 @@
 import React, { FC, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import {Controller, useForm } from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
 import { Snippet } from '../types'
 import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
+import { Editor } from './Editor'
 
 type FormData = Pick<Snippet, 'content' | 'title'>
 
@@ -19,6 +20,7 @@ const SnippetForm: FC<{
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues,
@@ -66,7 +68,11 @@ const SnippetForm: FC<{
         <input type="text" {...register('title', { required: true })} />
         {/* include validation with required or other standard HTML validation rules */}
         Content:
-        <textarea {...register('content', { required: true })} />
+        <Controller
+          control={control}
+          name="content"
+          render={({field: {onChange, onBlur, value}}) => <Editor onChange={onChange} onBlur={onBlur} value={value}/>}
+        />
         {/* errors will return when field validation fails  */}
         {errors.content && <span>This field is required</span>}
         <Button type="submit" icon={PlusIcon} loading={loading}>
