@@ -13,7 +13,7 @@ const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
   const { user } = useUser()
   return (
     <div className="prose">
-      <div dangerouslySetInnerHTML={{ __html: snippet.content as string }}/>
+      <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }}/>
       {user && snippet && user.id === snippet.author && (
         <Button
           as="a"

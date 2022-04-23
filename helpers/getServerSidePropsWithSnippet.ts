@@ -5,6 +5,9 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+
 
 export const getServerSidePropsWithSnippet: GetServerSideProps = async (
   context
@@ -17,22 +20,23 @@ export const getServerSidePropsWithSnippet: GetServerSideProps = async (
     .eq('id', id)
     .single()
 
-  // snippet.content
-  const text = await unified()
-      .use(remarkParse)
-      .use(remarkRehype)
-      .use(rehypeFormat)
-      .use(rehypeStringify)
-      .process(snippet.content)
-
-  // console.log({text})
-  snippet.content = text.value
 
   if (snippet === null) {
     return {
       notFound: true,
     }
   }
+
+  const text = await unified()
+      .use(remarkParse)
+      .use(remarkRehype)
+      .use(remarkGfm)
+      .use(rehypeFormat)
+      .use(rehypeStringify)
+      .use(rehypeHighlight)
+      .process(snippet.content)
+
+  snippet.renderedContent = text.value
 
   return {
     props: {
