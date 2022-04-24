@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import Layout from '../../components/Layout'
 import { GetServerSideProps } from 'next'
 import { NextPageWithLayout } from '../_app'
@@ -8,28 +8,27 @@ import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsW
 import { PencilAltIcon } from '@heroicons/react/solid'
 import Button from '../../components/Button'
 
-
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
   const { user } = useUser()
-  return (
-    <div className="prose">
-      <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }}/>
-      {user && snippet && user.id === snippet.author && (
-        <Button
-          as="a"
-          href={`/edit/${snippet.id}`}
-          nextLink
-          icon={PencilAltIcon}
-        >
-          Edit
-        </Button>
-      )}
-    </div>
-  )
-}
 
-Slug.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>
+  const navButtons = []
+
+  if (user && snippet && user.id === snippet.author) {
+    navButtons.push(
+      <Button as="a" href={`/edit/${snippet.id}`} nextLink icon={PencilAltIcon}>
+        Edit
+      </Button>
+    )
+  }
+
+  return (
+    <Layout theme="django" actions={navButtons}>
+      <>
+        <h1 className="py-10 text-center">{snippet.title}</h1>
+        <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }} />
+      </>
+    </Layout>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps =
