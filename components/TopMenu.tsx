@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { FC, Fragment } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 import Button from './Button'
@@ -7,6 +7,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
+import { Theme } from './Layout'
 
 const navigation: Array<{
   name: string
@@ -14,7 +15,7 @@ const navigation: Array<{
   current: boolean
 }> = []
 
-const TopMenu = () => {
+const TopMenu: FC<{ theme: Theme }> = ({ theme }) => {
   const { user, isLoading } = useUser()
 
   return (

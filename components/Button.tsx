@@ -1,12 +1,14 @@
 import Link from 'next/link'
-import React, { FC, MouseEventHandler } from 'react'
+import React, { FC, MouseEventHandler, useContext } from 'react'
 import { Icon as IconType } from '@heroicons'
 import { RefreshIcon } from '@heroicons/react/solid'
 import classNames from 'classnames'
+import { ThemeContext } from './Layout'
 
 type ButtonProps = {
   icon?: IconType
   onClick?: MouseEventHandler
+  kind?: 'primary' | 'danger'
 } & (
   | {
       type: 'button' | 'submit'
@@ -33,7 +35,10 @@ const Button: FC<ButtonProps> = ({
   as: Component = 'button',
   icon,
   onClick,
+  kind = 'primary',
 }) => {
+  const theme = useContext(ThemeContext)
+
   const Icon = loading ? RefreshIcon : icon
 
   const element = (
@@ -41,7 +46,13 @@ const Button: FC<ButtonProps> = ({
       href={href}
       type={type}
       onClick={onClick}
-      className="cursor-pointer inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      className={classNames(
+        'inline-flex cursor-pointer items-center rounded border border-transparent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2',
+        {
+          [theme.colors.primary]: kind === 'primary',
+          'bg-red-600': kind === 'danger',
+        }
+      )}
     >
       {Icon && (
         <Icon

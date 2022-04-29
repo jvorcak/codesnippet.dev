@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { UserProvider } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { NextPage } from 'next'
-import { ReactElement, ReactNode } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 
 export type NextPageWithLayout<T = any> = NextPage<T> & {

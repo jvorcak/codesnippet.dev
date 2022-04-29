@@ -23,10 +23,10 @@ const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
 
   return (
     <Layout theme="django" actions={navButtons}>
-      <>
+      <article className="prose prose-slate mx-auto">
         <h1 className="py-10 text-center">{snippet.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }} />
-      </>
+      </article>
     </Layout>
   )
 }

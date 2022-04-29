@@ -14,10 +14,15 @@ const Home: NextPageWithLayout<{ snippets: Snippet[] }> = ({ snippets }) => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ul className="w-full grid grid-cols-2">
+      <ul className="grid w-full grid-cols-2">
         {snippets?.map((snippet: Snippet) => (
-          <li key={snippet.id} className="border border-red-200 m-2 h-72">
-            <Link href={`/${snippet.id}/${snippet.slug}`}><a className="w-full h-full block">{snippet.title}</a></Link>
+          <li
+            key={snippet.id}
+            className="m-2 h-72 border border-2 border-dashed p-2"
+          >
+            <Link href={`/${snippet.id}/${snippet.slug}`}>
+              <a className="block h-full w-full">{snippet.title}</a>
+            </Link>
           </li>
         ))}
       </ul>
