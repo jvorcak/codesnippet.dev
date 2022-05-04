@@ -26,7 +26,11 @@ export default async function handler(
 
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
+    defaultViewport: {
+      width: 1200,
+      height: 675,
+      deviceScaleFactor: 2,
+    },
     executablePath: await chromium.executablePath,
     headless: true,
     ignoreHTTPSErrors: true,
@@ -37,12 +41,6 @@ export default async function handler(
   await page.goto(
     encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
   )
-
-  await browser.setViewportSize({
-    width: 1200,
-    height: 675,
-    deviceScaleFactor: 2,
-  })
 
   const imageBuffer = await page.screenshot()
 
