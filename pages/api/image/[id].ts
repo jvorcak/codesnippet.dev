@@ -8,7 +8,7 @@ type Data = {
 
 export const getURL = () =>
   process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
-    ? 'https://createimage.dev'
+    ? 'https://codesnippet-development.vercel.app'
     : 'http://localhost:3000'
 
 export default async function handler(
@@ -27,7 +27,9 @@ export default async function handler(
   const browser = await playwright.launchChromium({
     headless: true,
   })
-  const page = await browser.newPage()
+
+  const context = await browser.newContext({ deviceScaleFactor: 2 })
+  const page = await context.newPage()
 
   await page.goto(
     encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
