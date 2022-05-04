@@ -24,8 +24,6 @@ export default async function handler(
 
   const { download } = req.query
 
-  const executablePath = (await chromium.executablePath) ?? undefined
-
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
