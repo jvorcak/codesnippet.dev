@@ -11,6 +11,15 @@ export const getURL = () =>
     ? 'https://codesnippet-development.vercel.app'
     : 'http://localhost:3000'
 
+const getPuppeteer = async () => {
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'production') {
+    return chromium.puppeteer
+  } else {
+    const { default: mainPuppeteer } = await import('puppeteer')
+    return mainPuppeteer
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -24,7 +33,9 @@ export default async function handler(
 
   const { download } = req.query
 
-  const browser = await chromium.puppeteer.launch({
+  const puppeteer = await getPuppeteer()
+
+  const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: {
       width: 1200,
