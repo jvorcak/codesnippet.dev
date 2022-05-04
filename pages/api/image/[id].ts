@@ -24,19 +24,10 @@ export default async function handler(
 
   const { download } = req.query
 
-  // const browser = await chromium.puppeteer.launch({
-  //   args: chromium.args,
-  //   defaultViewport: chromium.defaultViewport,
-  //   executablePath: await chromium.executablePath,
-  //   headless: true,
-  //   ignoreHTTPSErrors: true,
-  // })
-  const browser = await playwright.launchChromium()
-
+  const browser = await playwright.launchChromium({
+    headless: true,
+  })
   const page = await browser.newPage()
-  // page.setUserAgent(
-  //   'Opera/9.80 (J2ME/MIDP; Opera Mini/5.1.21214/28.2725; U; ru) Presto/2.8.119 Version/11.10'
-  // )
 
   await page.goto(
     encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
