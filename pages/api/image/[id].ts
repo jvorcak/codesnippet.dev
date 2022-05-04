@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 const chromium = require('chrome-aws-lambda')
-const playwright = require('playwright-core')
 
 type Data = {
   name: string
@@ -27,19 +26,20 @@ export default async function handler(
 
   const executablePath = (await chromium.executablePath) ?? undefined
 
-  const browser = await playwright.chromium.launch({
+  const browser = await chromium.puppeteer.launch({
     args: chromium.args,
-    executablePath,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
     headless: true,
+    ignoreHTTPSErrors: true,
   })
 
-  const context = await browser.newContext({ deviceScaleFactor: 2 })
-  const page = await context.newPage()
+  const page = await browser.newPage()
 
   await page.goto(
     encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
   )
-  await page.setViewportSize({ width: 1200, height: 675 })
+  await page.setViewportSize({ width: 1200, height: 675, deviceScaleFactor: 2 })
 
   const imageBuffer = await page.screenshot()
 
