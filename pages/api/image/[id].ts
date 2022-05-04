@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
-const playwright = require('playwright-aws-lambda')
+// const chromium = require('chrome-aws-lambda')
+const playwright = require('playwright-core')
 
 type Data = {
   name: string
@@ -24,7 +25,9 @@ export default async function handler(
 
   const { download } = req.query
 
-  const browser = await playwright.launchChromium({
+  const browser = await playwright.chromium.launch({
+    // args: chromium.args,
+    // executablePath: await chromium.executablePath,
     headless: true,
   })
 
