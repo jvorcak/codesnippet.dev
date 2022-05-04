@@ -37,7 +37,12 @@ export default async function handler(
   await page.goto(
     encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
   )
-  await page.setViewportSize({ width: 1200, height: 675, deviceScaleFactor: 2 })
+
+  await browser.setViewportSize({
+    width: 1200,
+    height: 675,
+    deviceScaleFactor: 2,
+  })
 
   const imageBuffer = await page.screenshot()
 
