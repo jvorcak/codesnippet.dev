@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react'
+import React, { FC, Fragment, useContext } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 import Button from './Button'
@@ -7,7 +7,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
-import { Theme } from './Layout'
+import { Theme, ThemeContext } from './Layout'
+import Logo from './Logo'
 
 const navigation: Array<{
   name: string
@@ -26,7 +27,11 @@ const TopMenu: FC<{ theme: Theme }> = ({ theme }) => {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link href="/">codesnippet.dev</Link>
+                  <Link href="/">
+                    <a>
+                      <Logo className={classNames('w-40', theme.logo)} />
+                    </a>
+                  </Link>
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (

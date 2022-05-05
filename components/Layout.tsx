@@ -6,6 +6,7 @@ type ThemeName = 'django' | 'default'
 
 export type Theme = {
   background: string
+  logo: string
   colors: {
     primary: string
   }
@@ -14,12 +15,14 @@ export type Theme = {
 const THEMES: Record<ThemeName, Theme> = {
   django: {
     background: 'bg-[url("/django.svg")]',
+    logo: 'text-[#166e4d]',
     colors: {
       primary: 'bg-[#166e4d] hover:bg-[#092E20]',
     },
   },
   default: {
     background: 'bg-gradient-to-r from-cyan-500 to-blue-500',
+    logo: 'text-blue-500',
     colors: {
       primary: 'bg-blue-500',
     },
