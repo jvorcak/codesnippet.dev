@@ -14,7 +14,7 @@ export type Theme = {
 
 const THEMES: Record<ThemeName, Theme> = {
   django: {
-    background: 'bg-[url("/webscope.svg")]',
+    background: 'bg-[url("/webscope.svg")] bg-fixed',
     logo: 'text-[#166e4d]',
     colors: {
       primary: 'bg-[#166e4d] hover:bg-[#092E20]',
