@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from 'react'
+import React from 'react'
 import Layout from '../../components/Layout'
 import SnippetForm from '../../components/SnippetForm'
 import { NextPageWithLayout } from '../_app'

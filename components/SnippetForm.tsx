@@ -41,36 +41,20 @@ const SnippetForm: FC<{
   const onSubmit = async (formData: FormData) => {
     setLoading(true)
     try {
-      if (snippetId) {
-        const { data, error } = await supabaseClient
-          .from('snippets')
-          .update({
-            title: formData.title,
-            content: formData.content,
-            slug: slug(formData.title as string),
-          })
-          .match({
-            id: snippetId,
-          })
-          .single()
+      const { data, error } = await supabaseClient
+        .from('snippets')
+        .upsert({
+          id: snippetId,
+          title: formData.title,
+          content: formData.content,
+          slug: slug(formData.title as string),
+          updated_at: new Date(),
+        })
+        .single()
 
-        if (data?.id) {
-          await router.push(`/${data.id}/${data.slug}`)
-        }
-      } else {
-        const { data, error } = await supabaseClient
-          .from('snippets')
-          .insert([
-            {
-              title: formData.title,
-              content: formData.content,
-              slug: slug(formData.title as string),
-            },
-          ])
-          .single()
-        if (data?.id) {
-          await router.push(`/${data.id}/${data.slug}`)
-        }
+      if (data?.id) {
+        await fetch(`/api/image/${data.id}`)
+        await router.push(`/${data.id}/${data.slug}`)
       }
     } finally {
       setLoading(false)

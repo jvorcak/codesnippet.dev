@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+#__next {
+    height: 100%;
+    min-height: 100%;
+}
+
 .cm-editor.cm-focused, input:focus {
     outline: 2px dashed gray !important;
+}
+
+@font-face {
+    font-family: 'Koulen';
+    font-style: normal;
+    font-weight: 400;
+    src: local(''), url('/fonts/Koulen-Regular.ttf') format('truetype');
 }

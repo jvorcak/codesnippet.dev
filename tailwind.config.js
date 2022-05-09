@@ -4,7 +4,21 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        koulen: ['Koulen', 'sans-serif'],
+      },
+      colors: {
+        editors: {
+          github: {
+            dark: '#0d1117',
+          },
+        },
+      },
+    },
   },
   plugins: [require('@tailwindcss/typography')],
+  corePlugins: {
+    fontFamily: true,
+  },
 }

@@ -1,5 +1,6 @@
 import { definitions } from './supabase'
 
 export type Snippet = definitions['snippets'] & {
-    renderedContent: string
+  renderedContent: string
+  imageURL?: string
 }

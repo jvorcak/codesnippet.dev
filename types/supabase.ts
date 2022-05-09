@@ -24,6 +24,8 @@ export interface paths {
           /** Title of a snippet */
           title?: parameters["rowFilter.snippets.title"];
           slug?: parameters["rowFilter.snippets.slug"];
+          imagePath?: parameters["rowFilter.snippets.imagePath"];
+          updated_at?: parameters["rowFilter.snippets.updated_at"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -82,6 +84,8 @@ export interface paths {
           /** Title of a snippet */
           title?: parameters["rowFilter.snippets.title"];
           slug?: parameters["rowFilter.snippets.slug"];
+          imagePath?: parameters["rowFilter.snippets.imagePath"];
+          updated_at?: parameters["rowFilter.snippets.updated_at"];
         };
         header: {
           /** Preference */
@@ -104,6 +108,8 @@ export interface paths {
           /** Title of a snippet */
           title?: parameters["rowFilter.snippets.title"];
           slug?: parameters["rowFilter.snippets.slug"];
+          imagePath?: parameters["rowFilter.snippets.imagePath"];
+          updated_at?: parameters["rowFilter.snippets.updated_at"];
         };
         body: {
           /** snippets */
@@ -150,6 +156,13 @@ export interface definitions {
     title?: string;
     /** Format: character varying */
     slug: string;
+    /** Format: text */
+    imagePath?: string;
+    /**
+     * Format: timestamp with time zone
+     * @default now()
+     */
+    updated_at: string;
   };
 }
 
@@ -206,6 +219,10 @@ export interface parameters {
   "rowFilter.snippets.title": string;
   /** Format: character varying */
   "rowFilter.snippets.slug": string;
+  /** Format: text */
+  "rowFilter.snippets.imagePath": string;
+  /** Format: timestamp with time zone */
+  "rowFilter.snippets.updated_at": string;
 }
 
 export interface operations {}

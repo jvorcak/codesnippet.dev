@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 const chromium = require('chrome-aws-lambda')
+import { decode } from 'base64-arraybuffer'
 
 type Data = {
   name: string
@@ -31,7 +32,7 @@ export default async function handler(
     (id) => id.provider === 'twitter'
   )?.identity_data
 
-  const { download } = req.query
+  const { id } = req.query
 
   const puppeteer = await getPuppeteer()
 
@@ -49,18 +50,38 @@ export default async function handler(
 
   const page = await browser.newPage()
 
-  await page.goto(
-    encodeURI(`${getURL()}/44/how-to-kill-a-process-in-unix-system`)
-  )
+  await page.goto(`${getURL()}/${id}/image`)
 
+  const imageBufferBase64 = await page.screenshot({ encoding: 'base64' })
   const imageBuffer = await page.screenshot()
 
-  if (download) {
-    res.setHeader(
-      'Content-disposition',
-      'attachment; filename=social-image.png'
-    )
-  }
+  const imagePath = `${user?.id}/${id}.png`
+
+  const { data, error } = await supabaseClient.storage
+    .from('images')
+    .upload(imagePath, decode(imageBufferBase64), {
+      upsert: true,
+      contentType: 'image/png',
+      cacheControl: '3600',
+    })
+
+  await supabaseClient
+    .from('snippets')
+    .update({
+      imagePath,
+    })
+    .match({
+      id,
+    })
+
+  console.log({ data, error })
+
+  // if (download) {
+  //   res.setHeader(
+  //     'Content-disposition',
+  //     'attachment; filename=social-image.png'
+  //   )
+  // }
 
   res.writeHead(200, {
     'Content-Type': 'image/png',

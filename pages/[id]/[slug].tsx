@@ -5,7 +5,7 @@ import { NextPageWithLayout } from '../_app'
 import { Snippet } from '../../types'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
 import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
-import { PencilAltIcon } from '@heroicons/react/solid'
+import { PencilAltIcon, ShareIcon } from '@heroicons/react/solid'
 import Button from '../../components/Button'
 
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
@@ -21,9 +21,16 @@ const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
     )
   }
 
+  navButtons.push(
+    <Button icon={ShareIcon} onClick={() => {}} type="button">
+      Share
+    </Button>
+  )
+
   return (
     <Layout theme="django" actions={navButtons}>
-      <article className="prose prose-slate mx-auto">
+      <img src={snippet.imageURL} className="shadow-2xl" />
+      <article className="prose prose-slate mx-auto pt-10">
         <h1 className="py-10 text-center">{snippet.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }} />
       </article>
