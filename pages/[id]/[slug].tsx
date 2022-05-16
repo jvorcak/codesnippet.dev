@@ -4,9 +4,9 @@ import { GetServerSideProps } from 'next'
 import { NextPageWithLayout } from '../_app'
 import { Snippet } from '../../types'
 import { useUser } from '@supabase/supabase-auth-helpers/react'
-import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
 import { PencilAltIcon, ShareIcon } from '@heroicons/react/solid'
 import Button from '../../components/Button'
+import { getServerSidePropsWithSnippet } from '../../helpers/common'
 
 const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
   const { user } = useUser()

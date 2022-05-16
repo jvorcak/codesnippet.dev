@@ -10,4 +10,5 @@ export type Snippet = Omit<definitions['snippets'], 'imageLayout'> & {
 export type CodeSnippet = {
   lang: string
   content: string
+  key: string
 }

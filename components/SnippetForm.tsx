@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useState } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import React, { FC, useCallback, useMemo, useState } from 'react'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
 import { Snippet } from '../types'
@@ -7,8 +7,9 @@ import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { Editor } from './Editor'
-// import { useUser } from '@supabase/supabase-auth-helpers/react'
 import { ImageLayoutComponent } from './ImageLayoutComponent'
+import { extractCodeSnippets } from '../helpers/common'
+import { useAsync } from 'react-use'
 
 type FormData = Pick<Snippet, 'content' | 'title' | 'imageLayout'>
 
@@ -32,16 +33,26 @@ const SnippetForm: FC<{
     },
   })
 
+  const content = useWatch<FormData>({
+    control: methods.control,
+    name: 'content',
+  })
+
+  const title = useWatch<FormData>({
+    control: methods.control,
+    name: 'title',
+  }) as string
+
+  const codeSnippets = useAsync(async () => {
+    return await extractCodeSnippets(content as string).catch(console.error)
+  }, [content])
+
   const {
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = methods
-
-  const values = watch()
-  console.log(values)
 
   const deleteSnippet = useCallback(async () => {
     await supabaseClient
@@ -80,8 +91,11 @@ const SnippetForm: FC<{
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ImageLayoutComponent title={values.title} />
-        {JSON.stringify({ imageLayout: values.imageLayout })}
+        <ImageLayoutComponent title={title} />
+        {/*{JSON.stringify({ imageLayout: values.imageLayout })}*/}
+        {/*<hr />*/}
+        {JSON.stringify(codeSnippets)}
+        {/*<hr />*/}
         <div className="p-2">
           <div>
             <label className="block py-2">Title</label>

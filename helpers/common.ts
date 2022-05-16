@@ -14,6 +14,43 @@ import { Plugin } from 'unified'
 import remarkFrontmatter from 'remark-frontmatter'
 import { CodeSnippet } from '../types'
 
+export const extractCodeSnippets = async (
+  content?: string
+): Promise<CodeSnippet[]> => {
+  let codeSnippets: CodeSnippet[] = []
+
+  const extractCodeSnippetsPlugin: Plugin<[], Root> = () => {
+    return (tree: any) => {
+      // https://regex101.com/r/QhqGaI/1
+      const isNumberedSnippet = /^code-(\w+)$/gm
+
+      visit(tree, 'element', (node) => {
+        console.log(node.data?.meta)
+        const match = isNumberedSnippet.exec(node.data?.meta ?? '')
+        if (node.tagName === 'code' && match !== null) {
+          const [lang] = node?.properties?.className ?? []
+          codeSnippets.push({
+            lang: lang ?? null,
+            content: toText(node, { whitespace: 'pre' }),
+            key: match[1],
+          })
+        }
+        return node
+      })
+    }
+  }
+
+  await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+
+    .use(extractCodeSnippetsPlugin)
+    .use(rehypeStringify)
+    .process(content ?? '')
+
+  return codeSnippets
+}
+
 export const getServerSidePropsWithSnippet: GetServerSideProps = async (
   context
 ) => {
@@ -31,41 +68,23 @@ export const getServerSidePropsWithSnippet: GetServerSideProps = async (
     }
   }
 
-  let codeSnippets: CodeSnippet[] = []
-
-  const extractCodeSnippetsPlugin: Plugin<[], Root> = () => {
-    return (tree: any) => {
-      visit(tree, 'element', (node) => {
-        if (node.tagName === 'code') {
-          const [lang] = node?.properties?.className ?? []
-          codeSnippets.push({
-            lang: lang ?? null,
-            content: toText(node, { whitespace: 'pre' }),
-          })
-        }
-        return node
-      })
-    }
-  }
-
   const text = await unified()
     .use(remarkParse)
     .use(remarkRehype)
     .use(remarkGfm)
     .use(rehypeFormat)
-    .use(extractCodeSnippetsPlugin)
     .use(rehypeStringify)
     .use(remarkFrontmatter, { type: 'yaml', marker: '-' })
     .use(rehypeHighlight)
     .process(snippet.content)
-
-  console.log({ codeSnippets })
 
   snippet.imageURL =
     (await supabaseClient.storage.from('images').getPublicUrl(snippet.imagePath)
       .publicURL) + `?lastUpdated=${snippet.updated_at}`
 
   snippet.renderedContent = text.value
+
+  const codeSnippets = await extractCodeSnippets(snippet.content)
 
   return {
     props: {

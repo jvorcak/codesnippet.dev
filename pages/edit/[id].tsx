@@ -4,8 +4,8 @@ import SnippetForm from '../../components/SnippetForm'
 import { NextPageWithLayout } from '../_app'
 import { GetServerSideProps } from 'next'
 import { Snippet } from '../../types'
-import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
 import TopMenu from '../../components/TopMenu'
+import { getServerSidePropsWithSnippet } from '../../helpers/common'
 
 const EditPage: NextPageWithLayout<{
   snippet: Snippet
