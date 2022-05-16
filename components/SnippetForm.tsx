@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
 import { Snippet } from '../types'
@@ -7,26 +7,41 @@ import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { Editor } from './Editor'
-import { useUser } from '@supabase/supabase-auth-helpers/react'
+// import { useUser } from '@supabase/supabase-auth-helpers/react'
+import { ImageLayoutComponent } from './ImageLayoutComponent'
 
-type FormData = Pick<Snippet, 'content' | 'title'>
+type FormData = Pick<Snippet, 'content' | 'title' | 'imageLayout'>
 
 const SnippetForm: FC<{
   snippetId?: Snippet['id']
   defaultValues?: FormData
 }> = ({ defaultValues, snippetId }) => {
   const [loading, setLoading] = useState(false)
-  const { user } = useUser()
+  // const { user } = useUser()
   const router = useRouter()
+
+  const methods = useForm<FormData>({
+    defaultValues: {
+      ...defaultValues,
+      // react-hook-form doesn't set defautl value if the value is null
+      imageLayout:
+        defaultValues?.imageLayout === null
+          ? undefined
+          : defaultValues?.imageLayout,
+      content: defaultValues?.content ?? new Array(10).join('\n'),
+    },
+  })
 
   const {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues,
-  })
+  } = methods
+
+  const values = watch()
+  console.log(values)
 
   const deleteSnippet = useCallback(async () => {
     await supabaseClient
@@ -49,6 +64,7 @@ const SnippetForm: FC<{
           content: formData.content,
           slug: slug(formData.title as string),
           updated_at: new Date(),
+          imageLayout: formData.imageLayout,
         })
         .single()
 
@@ -62,8 +78,10 @@ const SnippetForm: FC<{
   }
 
   return (
-    <div>
+    <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <ImageLayoutComponent title={values.title} />
+        {JSON.stringify({ imageLayout: values.imageLayout })}
         <div className="p-2">
           <div>
             <label className="block py-2">Title</label>
@@ -98,7 +116,7 @@ const SnippetForm: FC<{
           </Button>
         </div>
       </form>
-    </div>
+    </FormProvider>
   )
 }
 

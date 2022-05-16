@@ -1,12 +1,9 @@
 .editor {
-    /* position */
-    @apply absolute right-36 bottom-36;
     /* style */
-    @apply rounded-xl p-4 bg-editors-github-dark text-white shadow-xl shadow-gray-600;
+    @apply rounded-xl p-4 bg-editors-github-dark text-white;
     /* grid */
     @apply grid;
     grid-template-rows: 2rem 1fr;
 
-    min-height: 200px;
-    min-width: 400px;
+    @apply h-full w-full;
 }

@@ -5,21 +5,38 @@ import { CodeSnippet, Snippet } from '../../types'
 import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
 import CodeEditor from '../../components/CodeEditor'
 import styles from './image.module.css'
-import classNames from 'classnames'
+import GridLayout from 'react-grid-layout'
 
 const Slug: NextPageWithLayout<{
   snippet: Snippet
   codeSnippets: CodeSnippet[]
 }> = ({ snippet, codeSnippets }) => {
   return (
-    <div className={classNames('h-full w-full', styles.django)}>
-      <h1 className="p-20 font-koulen font-sans text-6xl capitalize text-white">
-        {snippet.title}
-      </h1>
-      {codeSnippets.map(({ lang, content }) => (
-        <CodeEditor snippet={content} />
-      ))}
-      {/*<div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }} />*/}
+    <div className={styles.django}>
+      <GridLayout
+        isDraggable={false}
+        isResizable={false}
+        layout={snippet.imageLayout}
+        cols={100}
+        rowHeight={27}
+        maxRows={25}
+        width={1200}
+        style={{ height: 675, maxHeight: 675 }}
+        compactType={null}
+        isBounded={true}
+      >
+        <div
+          key="title"
+          className="flex items-center font-koulen text-6xl uppercase text-white"
+        >
+          {snippet.title}
+        </div>
+        {codeSnippets.slice(0, 10).map(({ lang, content }, idx) => (
+          <div key={`code-${idx}`}>
+            <CodeEditor snippet={content} />
+          </div>
+        ))}
+      </GridLayout>
     </div>
   )
 }

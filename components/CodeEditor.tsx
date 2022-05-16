@@ -19,7 +19,7 @@ const CodeEditor = ({ snippet }: { snippet: string }) => {
         <div className="mr-1 h-3 w-3 rounded-full bg-orange-400" />
         <div className="mr-1 h-3 w-3 rounded-full bg-green-400" />
       </div>
-      <div className="col-start-1 row-start-2">
+      <div className="col-start-1 row-start-2 overflow-auto">
         <Lowlight language="html" value={snippet} />
       </div>
     </div>

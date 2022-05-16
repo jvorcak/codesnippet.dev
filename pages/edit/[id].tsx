@@ -1,18 +1,23 @@
 import React from 'react'
-import Layout from '../../components/Layout'
+import Layout, { ThemeContext, THEMES } from '../../components/Layout'
 import SnippetForm from '../../components/SnippetForm'
 import { NextPageWithLayout } from '../_app'
 import { GetServerSideProps } from 'next'
 import { Snippet } from '../../types'
 import { getServerSidePropsWithSnippet } from '../../helpers/getServerSidePropsWithSnippet'
+import TopMenu from '../../components/TopMenu'
 
 const EditPage: NextPageWithLayout<{
   snippet: Snippet
 }> = ({ snippet }) => {
+  const theme = THEMES['default']
   return (
-    <Layout theme="django">
-      <SnippetForm snippetId={snippet.id} defaultValues={snippet} />
-    </Layout>
+    <ThemeContext.Provider value={theme}>
+      <TopMenu theme={theme} />
+      <div className="m-10 mx-auto w-[1200px] rounded-md">
+        <SnippetForm snippetId={snippet.id} defaultValues={snippet} />
+      </div>
+    </ThemeContext.Provider>
   )
 }
 

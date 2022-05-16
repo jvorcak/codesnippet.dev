@@ -12,7 +12,7 @@ export type Theme = {
   }
 }
 
-const THEMES: Record<ThemeName, Theme> = {
+export const THEMES: Record<ThemeName, Theme> = {
   django: {
     background: 'bg-[url("/webscope.svg")] bg-fixed',
     logo: 'text-[#166e4d]',
