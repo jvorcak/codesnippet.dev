@@ -1,5 +1,11 @@
 import React, { FC, useCallback, useMemo, useState } from 'react'
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
 import { Snippet } from '../types'
@@ -11,34 +17,57 @@ import { ImageLayoutComponent } from './ImageLayoutComponent'
 import { extractCodeSnippets } from '../helpers/common'
 import { useAsync } from 'react-use'
 
-type FormData = Pick<Snippet, 'content' | 'title' | 'imageLayout'>
+export type SnippetFormData = Pick<Snippet, 'content' | 'title' | 'imageLayout'>
 
 const SnippetForm: FC<{
   snippetId?: Snippet['id']
-  defaultValues?: FormData
+  defaultValues?: SnippetFormData
 }> = ({ defaultValues, snippetId }) => {
   const [loading, setLoading] = useState(false)
   // const { user } = useUser()
   const router = useRouter()
 
-  const methods = useForm<FormData>({
+  const methods = useForm<SnippetFormData>({
     defaultValues: {
       ...defaultValues,
-      // react-hook-form doesn't set defautl value if the value is null
-      imageLayout:
-        defaultValues?.imageLayout === null
-          ? undefined
-          : defaultValues?.imageLayout,
+      // react-hook-form doesn't set default value if the value is null
+      imageLayout: defaultValues?.imageLayout ?? [
+        {
+          i: 'title',
+          x: 0,
+          y: 2,
+          w: 100,
+          h: 2,
+          content: '',
+          lang: '',
+        },
+      ],
       content: defaultValues?.content ?? new Array(10).join('\n'),
     },
   })
 
-  const content = useWatch<FormData>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = methods
+
+  const watchAllFields = watch()
+
+  const { fields, append, prepend, remove, swap, move, insert } =
+    useFieldArray<SnippetFormData>({
+      control: methods.control,
+      name: 'imageLayout',
+    })
+
+  const content = useWatch<SnippetFormData>({
     control: methods.control,
     name: 'content',
   })
 
-  const title = useWatch<FormData>({
+  const title = useWatch<SnippetFormData>({
     control: methods.control,
     name: 'title',
   }) as string
@@ -46,13 +75,6 @@ const SnippetForm: FC<{
   const codeSnippets = useAsync(async () => {
     return await extractCodeSnippets(content as string).catch(console.error)
   }, [content])
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = methods
 
   const deleteSnippet = useCallback(async () => {
     await supabaseClient
@@ -64,7 +86,7 @@ const SnippetForm: FC<{
       })
   }, [router, snippetId])
 
-  const onSubmit = async (formData: FormData) => {
+  const onSubmit = async (formData: SnippetFormData) => {
     setLoading(true)
     try {
       const { data, error } = await supabaseClient
@@ -91,11 +113,8 @@ const SnippetForm: FC<{
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ImageLayoutComponent title={title} />
-        {/*{JSON.stringify({ imageLayout: values.imageLayout })}*/}
-        {/*<hr />*/}
-        {JSON.stringify(codeSnippets)}
-        {/*<hr />*/}
+        {/*<ImageLayoutComponent title={title} />*/}
+        {JSON.stringify(watchAllFields)}
         <div className="p-2">
           <div>
             <label className="block py-2">Title</label>
@@ -107,6 +126,33 @@ const SnippetForm: FC<{
               />
             </p>
           </div>
+          {fields.map((field, index) => (
+            <textarea
+              className="w-full border-2 border-dashed p-2"
+              key={field.id} // important to include key with field's id
+              {...register(`imageLayout.${index}.content`, {
+                required: true,
+              })}
+            />
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              append(
+                {
+                  lang: 'typescript',
+                  content: '',
+                  w: 100,
+                  h: 2,
+                  x: 0,
+                  y: 2,
+                },
+                { shouldFocus: true }
+              )
+            }
+          >
+            Insert
+          </button>
           {/* include validation with required or other standard HTML validation rules */}
           <label className="block py-2">Content</label>
           <div className="border-2 border-dashed">

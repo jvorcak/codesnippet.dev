@@ -75,7 +75,7 @@ export const getServerSidePropsWithSnippet: GetServerSideProps = async (
     .use(rehypeFormat)
     .use(rehypeStringify)
     .use(remarkFrontmatter, { type: 'yaml', marker: '-' })
-    .use(rehypeHighlight)
+    // .use(rehypeHighlight)
     .process(snippet.content)
 
   snippet.imageURL =

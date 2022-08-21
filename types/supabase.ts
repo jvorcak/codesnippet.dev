@@ -167,7 +167,7 @@ export interface definitions {
      */
     updated_at: string;
     /** Format: json */
-    imageLayout?: string;
+    imageLayout?: unknown;
   };
 }
 
