@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { useController, useFieldArray, useFormContext } from 'react-hook-form'
-import GridLayout from 'react-grid-layout'
+import GridLayout, { Layout } from 'react-grid-layout'
 import CodeEditor from './CodeEditor'
 import classNames from 'classnames'
 import styles from '../pages/[id]/image.module.css'
@@ -9,11 +9,15 @@ import { SnippetFormData } from './SnippetForm'
 export const ImageLayoutComponent: FC<{
   title?: string
 }> = ({ title }) => {
-  const { control } = useFormContext<SnippetFormData>()
-  const { fields } = useFieldArray<SnippetFormData>({
-    control: control,
-    name: 'imageLayout',
-  })
+  const { control, watch } = useFormContext<SnippetFormData>()
+
+  // const { fields } = useFieldArray<SnippetFormData>({
+  //   control: control,
+  //   name: 'imageLayout',
+  // })
+
+  const codes = watch('codes')
+
   const {
     field: { onChange, onBlur, name, value, ref },
     fieldState: { invalid, isTouched, isDirty },
@@ -23,6 +27,8 @@ export const ImageLayoutComponent: FC<{
     control,
     rules: { required: true },
   })
+
+  console.info({ value })
 
   return (
     <GridLayout
@@ -40,11 +46,14 @@ export const ImageLayoutComponent: FC<{
       <div key="title" className="border-2 border-dashed border-gray-100">
         {title}
       </div>
-      {fields.map((field, index) => (
-        <div key="code-0">
-          <CodeEditor snippet={''} />
-        </div>
+      {codes?.map(({ i, content }) => (
+        <div key={i}>{content}</div>
       ))}
+      {/*{value?.map(({ i }) => (*/}
+      {/*  <div key={i}>*/}
+      {/*    <CodeEditor snippet={i} />*/}
+      {/*  </div>*/}
+      {/*))}*/}
     </GridLayout>
   )
 }

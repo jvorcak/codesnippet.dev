@@ -1,7 +1,8 @@
 import { definitions } from './supabase'
 import { Layout } from 'react-grid-layout'
 
-export interface Code extends Layout {
+export interface Code {
+  i: string
   lang: string
   content: string
 }
@@ -9,7 +10,8 @@ export interface Code extends Layout {
 export type Snippet = Omit<definitions['snippets'], 'imageLayout'> & {
   renderedContent: string
   imageURL?: string
-  imageLayout?: Code[]
+  imageLayout?: Layout[]
+  codes?: Code[]
 }
 
 export type CodeSnippet = {

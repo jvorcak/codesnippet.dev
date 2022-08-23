@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Controller,
   FormProvider,
@@ -6,18 +6,20 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
-import { Snippet } from '../types'
+import { Code, Snippet } from '../types'
 import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { Editor } from './Editor'
 import { ImageLayoutComponent } from './ImageLayoutComponent'
-import { extractCodeSnippets } from '../helpers/common'
-import { useAsync } from 'react-use'
 
-export type SnippetFormData = Pick<Snippet, 'content' | 'title' | 'imageLayout'>
+export type SnippetFormData = Pick<
+  Snippet,
+  'content' | 'title' | 'imageLayout' | 'codes'
+>
 
 const SnippetForm: FC<{
   snippetId?: Snippet['id']
@@ -38,11 +40,9 @@ const SnippetForm: FC<{
           y: 2,
           w: 100,
           h: 2,
-          content: '',
-          lang: '',
         },
       ],
-      content: defaultValues?.content ?? new Array(10).join('\n'),
+      content: defaultValues?.content ?? '',
     },
   })
 
@@ -54,27 +54,32 @@ const SnippetForm: FC<{
     formState: { errors },
   } = methods
 
-  const watchAllFields = watch()
+  const imageLayout = watch('imageLayout')
+  const codes = watch('codes')
+
+  // useEffect(() => {
+  //   // this hook is called if and only if you add or remove a code item
+  //   const ids = codes?.map(({ i }) => i) ?? []
+  //   ids.push('title')
+  //
+  //   console.log(ids)
+  // }, [codes])
+
+  const { append: appendLayoutItem } = useFieldArray<SnippetFormData>({
+    control: methods.control,
+    name: 'imageLayout',
+  })
 
   const { fields, append, prepend, remove, swap, move, insert } =
     useFieldArray<SnippetFormData>({
       control: methods.control,
-      name: 'imageLayout',
+      name: 'codes',
     })
-
-  const content = useWatch<SnippetFormData>({
-    control: methods.control,
-    name: 'content',
-  })
 
   const title = useWatch<SnippetFormData>({
     control: methods.control,
     name: 'title',
   }) as string
-
-  const codeSnippets = useAsync(async () => {
-    return await extractCodeSnippets(content as string).catch(console.error)
-  }, [content])
 
   const deleteSnippet = useCallback(async () => {
     await supabaseClient
@@ -98,6 +103,7 @@ const SnippetForm: FC<{
           slug: slug(formData.title as string),
           updated_at: new Date(),
           imageLayout: formData.imageLayout,
+          codes: formData.codes,
         })
         .single()
 
@@ -113,8 +119,10 @@ const SnippetForm: FC<{
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/*<ImageLayoutComponent title={title} />*/}
-        {JSON.stringify(watchAllFields)}
+        <ImageLayoutComponent title={title} />
+        {JSON.stringify(imageLayout)}
+        <hr />
+        {JSON.stringify(codes)}
         <div className="p-2">
           <div>
             <label className="block py-2">Title</label>
@@ -127,29 +135,51 @@ const SnippetForm: FC<{
             </p>
           </div>
           {fields.map((field, index) => (
-            <textarea
-              className="w-full border-2 border-dashed p-2"
-              key={field.id} // important to include key with field's id
-              {...register(`imageLayout.${index}.content`, {
-                required: true,
-              })}
-            />
+            <div key={index} className="bg-red-200 p-10">
+              ID:{' '}
+              <input
+                className="w-full border-2 border-dashed p-2"
+                {...register(`codes.${index}.i`, {
+                  required: true,
+                })}
+              />
+              Content:{' '}
+              <textarea
+                className="w-full border-2 border-dashed p-2"
+                {...register(`codes.${index}.content`, {
+                  required: true,
+                })}
+              />
+              <button
+                onClick={() => {
+                  console.log(imageLayout)
+                  remove(index)
+                }}
+              >
+                X
+              </button>
+            </div>
           ))}
           <button
             type="button"
-            onClick={() =>
+            onClick={() => {
+              const newId = uuidv4()
               append(
                 {
+                  i: newId,
                   lang: 'typescript',
                   content: '',
-                  w: 100,
-                  h: 2,
-                  x: 0,
-                  y: 2,
                 },
                 { shouldFocus: true }
               )
-            }
+              appendLayoutItem({
+                i: newId,
+                x: 0,
+                y: 2,
+                w: 100,
+                h: 2,
+              })
+            }}
           >
             Insert
           </button>

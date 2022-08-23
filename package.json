@@ -35,7 +35,8 @@
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
-    "slug": "^5.3.0"
+    "slug": "^5.3.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.0",
