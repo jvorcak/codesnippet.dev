@@ -47,13 +47,10 @@ export const ImageLayoutComponent: FC<{
         {title}
       </div>
       {codes?.map(({ i, content }) => (
-        <div key={i}>{content}</div>
+        <div key={i}>
+          <CodeEditor snippet={content} />
+        </div>
       ))}
-      {/*{value?.map(({ i }) => (*/}
-      {/*  <div key={i}>*/}
-      {/*    <CodeEditor snippet={i} />*/}
-      {/*  </div>*/}
-      {/*))}*/}
     </GridLayout>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout, { ThemeContext, THEMES } from '../../components/Layout'
+import { ThemeContext, THEMES } from '../../components/Layout'
 import SnippetForm from '../../components/SnippetForm'
 import { NextPageWithLayout } from '../_app'
 import { GetServerSideProps } from 'next'

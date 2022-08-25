@@ -9,7 +9,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import slug from 'slug'
-import { Code, Snippet } from '../types'
+import { Snippet } from '../types'
 import Button from './Button'
 import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'

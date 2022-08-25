@@ -13,9 +13,3 @@ export type Snippet = Omit<definitions['snippets'], 'imageLayout'> & {
   imageLayout?: Layout[]
   codes?: Code[]
 }
-
-export type CodeSnippet = {
-  lang: string
-  content: string
-  key: string
-}

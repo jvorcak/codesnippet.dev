@@ -1,7 +1,7 @@
 import React from 'react'
 import { GetServerSideProps } from 'next'
 import { NextPageWithLayout } from '../_app'
-import { CodeSnippet, Snippet } from '../../types'
+import { Snippet } from '../../types'
 import { getServerSidePropsWithSnippet } from '../../helpers/common'
 import CodeEditor from '../../components/CodeEditor'
 import styles from './image.module.css'
@@ -9,8 +9,7 @@ import GridLayout from 'react-grid-layout'
 
 const Slug: NextPageWithLayout<{
   snippet: Snippet
-  codeSnippets: CodeSnippet[]
-}> = ({ snippet, codeSnippets }) => {
+}> = ({ snippet }) => {
   return (
     <div className={styles.django}>
       <GridLayout
@@ -31,8 +30,8 @@ const Slug: NextPageWithLayout<{
         >
           {snippet.title}
         </div>
-        {codeSnippets.slice(0, 10).map(({ lang, content }, idx) => (
-          <div key={`code-${idx}`}>
+        {snippet.codes?.map(({ lang, content, i }) => (
+          <div key={i}>
             <CodeEditor snippet={content} />
           </div>
         ))}
