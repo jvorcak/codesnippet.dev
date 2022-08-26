@@ -6,8 +6,8 @@ import remarkRehype from 'remark-rehype'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkGfm from 'remark-gfm'
-import remarkFrontmatter from 'remark-frontmatter'
-import rehypeHighlight from 'rehype-highlight'
+import keyBy from 'lodash/keyBy'
+import { codeImport } from './remark-code-blocks-import'
 
 export const getServerSidePropsWithSnippet: GetServerSideProps = async (
   context
@@ -28,12 +28,15 @@ export const getServerSidePropsWithSnippet: GetServerSideProps = async (
 
   const text = await unified()
     .use(remarkParse)
+    .use(codeImport, {
+      codeMap: keyBy(snippet.codes, 'i'),
+    })
     .use(remarkRehype)
     .use(remarkGfm)
     .use(rehypeFormat)
     .use(rehypeStringify)
-    .use(remarkFrontmatter, { type: 'yaml', marker: '-' })
-    .use(rehypeHighlight)
+    // .use(remarkFrontmatter, { type: 'yaml', marker: '-' })
+    // .use(rehypeHighlight)
     .process(snippet.content)
 
   snippet.imageURL =

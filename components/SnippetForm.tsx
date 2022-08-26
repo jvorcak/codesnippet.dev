@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import {
   Controller,
   FormProvider,
@@ -57,14 +57,6 @@ const SnippetForm: FC<{
   const imageLayout = watch('imageLayout')
   const codes = watch('codes')
 
-  // useEffect(() => {
-  //   // this hook is called if and only if you add or remove a code item
-  //   const ids = codes?.map(({ i }) => i) ?? []
-  //   ids.push('title')
-  //
-  //   console.log(ids)
-  // }, [codes])
-
   const { append: appendLayoutItem } = useFieldArray<SnippetFormData>({
     control: methods.control,
     name: 'imageLayout',
@@ -120,9 +112,6 @@ const SnippetForm: FC<{
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <ImageLayoutComponent title={title} />
-        {JSON.stringify(imageLayout)}
-        <hr />
-        {JSON.stringify(codes)}
         <div className="p-2">
           <div>
             <label className="block py-2">Title</label>
@@ -177,7 +166,7 @@ const SnippetForm: FC<{
                 x: 0,
                 y: 2,
                 w: 100,
-                h: 2,
+                h: 200,
               })
             }}
           >
