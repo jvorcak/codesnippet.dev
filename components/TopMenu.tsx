@@ -23,7 +23,7 @@ const TopMenu: FC<{ theme: Theme }> = ({ theme }) => {
     <Disclosure as="nav" className="border-b border-gray-200 bg-white">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">

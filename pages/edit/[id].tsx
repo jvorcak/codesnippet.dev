@@ -14,7 +14,7 @@ const EditPage: NextPageWithLayout<{
   return (
     <ThemeContext.Provider value={theme}>
       <TopMenu theme={theme} />
-      <div className="m-10 mx-auto w-[1200px] rounded-md">
+      <div className="p-4 sm:p-6">
         <SnippetForm snippetId={snippet.id} defaultValues={snippet} />
       </div>
     </ThemeContext.Provider>

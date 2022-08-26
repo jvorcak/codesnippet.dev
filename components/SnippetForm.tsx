@@ -15,6 +15,8 @@ import { PlusIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/router'
 import { Editor } from './Editor'
 import { ImageLayoutComponent } from './ImageLayoutComponent'
+import { TrashIcon } from '@heroicons/react/solid'
+import { snippet } from '@codemirror/autocomplete'
 
 export type SnippetFormData = Pick<
   Snippet,
@@ -54,8 +56,7 @@ const SnippetForm: FC<{
     formState: { errors },
   } = methods
 
-  const imageLayout = watch('imageLayout')
-  const codes = watch('codes')
+  const content = watch('content')
 
   const { append: appendLayoutItem } = useFieldArray<SnippetFormData>({
     control: methods.control,
@@ -110,91 +111,126 @@ const SnippetForm: FC<{
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ImageLayoutComponent title={title} />
-        <div className="p-2">
-          <div>
-            <label className="block py-2">Title</label>
-            <p className="text-center">
-              <input
-                type="text"
-                className="w-full border-2 border-dashed p-2"
-                {...register('title', { required: true })}
-              />
-            </p>
-          </div>
-          {fields.map((field, index) => (
-            <div key={index} className="bg-red-200 p-10">
-              ID:{' '}
-              <input
-                className="w-full border-2 border-dashed p-2"
-                {...register(`codes.${index}.i`, {
-                  required: true,
-                })}
-              />
-              Content:{' '}
-              <textarea
-                className="w-full border-2 border-dashed p-2"
-                {...register(`codes.${index}.content`, {
-                  required: true,
-                })}
-              />
-              <button
+      <div className="grid max-w-full grid-cols-[1fr_1200px] gap-5">
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="p-2">
+              <div className="col-span-6">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Title
+                </label>
+                <input
+                  {...register('title', { required: true })}
+                  type="text"
+                  name="title"
+                  id="title"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+                />
+              </div>
+
+              {fields.map((field, index) => (
+                <div key={index} className="my-4 rounded-md bg-gray-100 p-4">
+                  <div className="col-span-6">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Title
+                    </label>
+                    <input
+                      {...register(`codes.${index}.i`, {
+                        required: true,
+                      })}
+                      type="text"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
+                    />
+                  </div>
+                  <div className="mt-2 sm:col-span-6">
+                    <label
+                      htmlFor="about"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Content
+                    </label>
+                    <div className="mt-1">
+                      <textarea
+                        rows={3}
+                        className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        {...register(`codes.${index}.content`, {
+                          required: true,
+                        })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-2 text-right">
+                    <Button
+                      kind="danger"
+                      onClick={() => {
+                        remove(index)
+                      }}
+                      icon={TrashIcon}
+                    >
+                      Remove Snippet
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <Button
+                icon={PlusIcon}
                 onClick={() => {
-                  console.log(imageLayout)
-                  remove(index)
+                  const newId = uuidv4()
+                  append(
+                    {
+                      i: newId,
+                      lang: 'typescript',
+                      content: '',
+                    },
+                    { shouldFocus: true }
+                  )
+                  appendLayoutItem({
+                    i: newId,
+                    x: 0,
+                    y: 2,
+                    w: 100,
+                    h: 200,
+                  })
                 }}
               >
-                X
-              </button>
+                Insert New Snippet
+              </Button>
+              {/* include validation with required or other standard HTML validation rules */}
+              <label className="block py-2">Content</label>
+              <div className="rounded-md border border-gray-300 p-1">
+                <Controller
+                  control={control}
+                  name="content"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Editor onChange={onChange} onBlur={onBlur} value={value} />
+                  )}
+                />
+              </div>
             </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => {
-              const newId = uuidv4()
-              append(
-                {
-                  i: newId,
-                  lang: 'typescript',
-                  content: '',
-                },
-                { shouldFocus: true }
-              )
-              appendLayoutItem({
-                i: newId,
-                x: 0,
-                y: 2,
-                w: 100,
-                h: 200,
-              })
-            }}
-          >
-            Insert
-          </button>
-          {/* include validation with required or other standard HTML validation rules */}
-          <label className="block py-2">Content</label>
-          <div className="border-2 border-dashed">
-            <Controller
-              control={control}
-              name="content"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Editor onChange={onChange} onBlur={onBlur} value={value} />
-              )}
-            />
-          </div>
+            {/* errors will return when field validation fails  */}
+            {errors.content && <span>This field is required</span>}
+            <div className="sticky bottom-0 flex justify-between bg-white p-5 shadow-2xl">
+              <Button type="button" kind="danger" onClick={deleteSnippet}>
+                Delete
+              </Button>
+              <Button type="submit" icon={PlusIcon} loading={loading}>
+                Submit
+              </Button>
+            </div>
+          </form>
         </div>
-        {/* errors will return when field validation fails  */}
-        {errors.content && <span>This field is required</span>}
-        <div className="sticky bottom-0 flex justify-between bg-white p-5 shadow-2xl">
-          <Button type="button" kind="danger" onClick={deleteSnippet}>
-            Delete
-          </Button>
-          <Button type="submit" icon={PlusIcon} loading={loading}>
-            Submit
-          </Button>
+        <div>
+          <ImageLayoutComponent title={title} />
+          {content}
         </div>
-      </form>
+      </div>
     </FormProvider>
   )
 }
