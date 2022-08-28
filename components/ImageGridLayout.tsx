@@ -24,6 +24,7 @@ const ImageGridLayout = ({
         style={{ height: 675, maxHeight: 675 }}
         compactType={null}
         isBounded={true}
+        allowOverlap={true}
         onLayoutChange={onLayoutChange}
       >
         <div

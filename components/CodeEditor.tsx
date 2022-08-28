@@ -9,13 +9,12 @@ import Lowlight from 'react-lowlight'
 // @ts-ignore
 import javascript from 'highlight.js/lib/languages/xml'
 import { Code } from '../types'
-import { useFormContext } from 'react-hook-form'
-import { SnippetFormData } from './SnippetForm'
+import classNames from 'classnames'
 Lowlight.registerLanguage('js', javascript)
 
 const CodeEditor = ({ code }: Code) => {
   return (
-    <div className={styles.editor}>
+    <div className={classNames(styles.editor, 'rotate-3')}>
       {/*<div className="text-center row-start-1 col-start-1">aaa</div>*/}
       <div className="grid grid-cols-2 items-center overflow-hidden text-ellipsis whitespace-nowrap">
         <div className="col-span-1 col-start-1 row-start-1 flex">
