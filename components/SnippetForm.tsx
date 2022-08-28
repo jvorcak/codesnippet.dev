@@ -61,16 +61,16 @@ const SnippetForm: FC<{
     formState: { errors },
   } = methods
 
-  const content = watch('content')
-  const codes = watch('codes')
   const formData = watch()
 
-  const [htmlPreview, setHTMLPreview] = useState()
+  const [htmlPreview, setHTMLPreview] = useState<string>()
 
   useEffect(() => {
-    contentToHTML(content, codes).then((result) => {
-      setHTMLPreview(result)
-    })
+    if (formData.content && formData.codes) {
+      contentToHTML(formData.content, formData.codes).then((result) => {
+        setHTMLPreview(result)
+      })
+    }
   }, [formData])
 
   const { append: appendLayoutItem } = useFieldArray<SnippetFormData>({

@@ -8,8 +8,12 @@ import rehypeStringify from 'rehype-stringify'
 import remarkGfm from 'remark-gfm'
 import keyBy from 'lodash/keyBy'
 import { codeImport } from './remark-code-blocks-import'
+import { Code } from '../types'
 
-export const contentToHTML = async (content: string, codes: Code[]): string => {
+export const contentToHTML = async (
+  content: string,
+  codes: Code[]
+): Promise<string> => {
   const parsed = await unified()
     .use(remarkParse)
     .use(codeImport, {
@@ -22,7 +26,7 @@ export const contentToHTML = async (content: string, codes: Code[]): string => {
     // .use(remarkFrontmatter, { type: 'yaml', marker: '-' })
     // .use(rehypeHighlight)
     .process(content)
-  return parsed.value
+  return parsed.value as string
 }
 
 export const getServerSidePropsWithSnippet: GetServerSideProps = async (
