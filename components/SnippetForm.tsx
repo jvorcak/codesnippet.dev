@@ -16,8 +16,12 @@ import { useRouter } from 'next/router'
 import { Editor } from './Editor'
 import { ImageLayoutComponent } from './ImageLayoutComponent'
 import { TrashIcon } from '@heroicons/react/solid'
-import { snippet } from '@codemirror/autocomplete'
 import { contentToHTML } from '../helpers/common'
+import dynamic from 'next/dynamic'
+
+const Kanva = dynamic(() => import('./Kanva'), {
+  ssr: false,
+})
 
 export type SnippetFormData = Pick<
   Snippet,
@@ -125,6 +129,7 @@ const SnippetForm: FC<{
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Kanva />
         <div className="grid min-h-screen max-w-full grid-cols-[1fr_1200px] gap-5 p-4">
           <div>
             <div className="p-2">
