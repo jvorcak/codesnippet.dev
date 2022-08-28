@@ -28,6 +28,8 @@ export interface paths {
           updated_at?: parameters["rowFilter.snippets.updated_at"];
           imageLayout?: parameters["rowFilter.snippets.imageLayout"];
           codes?: parameters["rowFilter.snippets.codes"];
+          html?: parameters["rowFilter.snippets.html"];
+          themeName?: parameters["rowFilter.snippets.themeName"];
           /** Filtering Columns */
           select?: parameters["select"];
           /** Ordering */
@@ -90,6 +92,8 @@ export interface paths {
           updated_at?: parameters["rowFilter.snippets.updated_at"];
           imageLayout?: parameters["rowFilter.snippets.imageLayout"];
           codes?: parameters["rowFilter.snippets.codes"];
+          html?: parameters["rowFilter.snippets.html"];
+          themeName?: parameters["rowFilter.snippets.themeName"];
         };
         header: {
           /** Preference */
@@ -116,6 +120,8 @@ export interface paths {
           updated_at?: parameters["rowFilter.snippets.updated_at"];
           imageLayout?: parameters["rowFilter.snippets.imageLayout"];
           codes?: parameters["rowFilter.snippets.codes"];
+          html?: parameters["rowFilter.snippets.html"];
+          themeName?: parameters["rowFilter.snippets.themeName"];
         };
         body: {
           /** snippets */
@@ -173,6 +179,10 @@ export interface definitions {
     imageLayout?: unknown;
     /** Format: json */
     codes?: unknown;
+    /** Format: text */
+    html?: string;
+    /** Format: character varying */
+    themeName?: string;
   };
 }
 
@@ -237,6 +247,10 @@ export interface parameters {
   "rowFilter.snippets.imageLayout": string;
   /** Format: json */
   "rowFilter.snippets.codes": string;
+  /** Format: text */
+  "rowFilter.snippets.html": string;
+  /** Format: character varying */
+  "rowFilter.snippets.themeName": string;
 }
 
 export interface operations {}

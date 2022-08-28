@@ -21,7 +21,7 @@ import { contentToHTML } from '../helpers/common'
 
 export type SnippetFormData = Pick<
   Snippet,
-  'content' | 'title' | 'imageLayout' | 'codes'
+  'content' | 'title' | 'imageLayout' | 'codes' | 'themeName'
 >
 
 const SnippetForm: FC<{
@@ -109,6 +109,7 @@ const SnippetForm: FC<{
           imageLayout: formData.imageLayout,
           codes: formData.codes,
           html: htmlPreview,
+          themeName: formData.themeName,
         })
         .single()
 
@@ -141,6 +142,24 @@ const SnippetForm: FC<{
                   id="title"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
                 />
+              </div>
+
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="themeName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Theme
+                </label>
+                <div className="mt-1">
+                  <select
+                    {...register('themeName', { required: true })}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  >
+                    <option value="django">Django</option>
+                    <option value="default">Default</option>
+                  </select>
+                </div>
               </div>
 
               {fields.map((field, index) => (
