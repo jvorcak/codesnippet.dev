@@ -8,7 +8,6 @@ export interface Code {
 }
 
 export type Snippet = Omit<definitions['snippets'], 'imageLayout'> & {
-  renderedContent: string
   imageURL?: string
   imageLayout?: Layout[]
   codes?: Code[]

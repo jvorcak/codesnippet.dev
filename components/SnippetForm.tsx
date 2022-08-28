@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
   Controller,
   FormProvider,
@@ -17,6 +17,7 @@ import { Editor } from './Editor'
 import { ImageLayoutComponent } from './ImageLayoutComponent'
 import { TrashIcon } from '@heroicons/react/solid'
 import { snippet } from '@codemirror/autocomplete'
+import { contentToHTML } from '../helpers/common'
 
 export type SnippetFormData = Pick<
   Snippet,
@@ -57,6 +58,16 @@ const SnippetForm: FC<{
   } = methods
 
   const content = watch('content')
+  const codes = watch('codes')
+  const formData = watch()
+
+  const [htmlPreview, setHTMLPreview] = useState()
+
+  useEffect(() => {
+    contentToHTML(content, codes).then((result) => {
+      setHTMLPreview(result)
+    })
+  }, [formData])
 
   const { append: appendLayoutItem } = useFieldArray<SnippetFormData>({
     control: methods.control,
@@ -97,6 +108,7 @@ const SnippetForm: FC<{
           updated_at: new Date(),
           imageLayout: formData.imageLayout,
           codes: formData.codes,
+          html: htmlPreview,
         })
         .single()
 
@@ -111,9 +123,9 @@ const SnippetForm: FC<{
 
   return (
     <FormProvider {...methods}>
-      <div className="grid max-w-full grid-cols-[1fr_1200px] gap-5">
-        <div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid min-h-screen max-w-full grid-cols-[1fr_1200px] gap-5 p-4">
+          <div>
             <div className="p-2">
               <div className="col-span-6">
                 <label
@@ -216,21 +228,25 @@ const SnippetForm: FC<{
             </div>
             {/* errors will return when field validation fails  */}
             {errors.content && <span>This field is required</span>}
-            <div className="sticky bottom-0 flex justify-between bg-white p-5 shadow-2xl">
-              <Button type="button" kind="danger" onClick={deleteSnippet}>
-                Delete
-              </Button>
-              <Button type="submit" icon={PlusIcon} loading={loading}>
-                Submit
-              </Button>
-            </div>
-          </form>
+          </div>
+          <div>
+            <ImageLayoutComponent title={title} />
+            <article className="prose prose-slate mx-auto pt-10">
+              <h1 className="py-10 text-center">{title}</h1>
+              <div dangerouslySetInnerHTML={{ __html: htmlPreview }} />
+            </article>
+          </div>
         </div>
-        <div>
-          <ImageLayoutComponent title={title} />
-          {content}
+
+        <div className="sticky bottom-0 flex justify-between border-t bg-white p-5">
+          <Button type="button" kind="danger" onClick={deleteSnippet}>
+            Delete
+          </Button>
+          <Button type="submit" icon={PlusIcon} loading={loading}>
+            Submit
+          </Button>
         </div>
-      </div>
+      </form>
     </FormProvider>
   )
 }

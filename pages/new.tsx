@@ -11,7 +11,7 @@ New.getLayout = function getLayout(page: ReactElement) {
   return (
     <ThemeContext.Provider value={theme}>
       <TopMenu theme={theme} />
-      <div className="m-10 mx-auto w-[1200px] rounded-md">
+      <div className="m-10 mx-auto w-[1200px] min-w-full rounded-md">
         <SnippetForm />
       </div>
     </ThemeContext.Provider>

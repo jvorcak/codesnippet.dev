@@ -32,7 +32,7 @@ const Slug: NextPageWithLayout<{ snippet: Snippet }> = ({ snippet }) => {
       <img src={snippet.imageURL} className="shadow-2xl" />
       <article className="prose prose-slate mx-auto pt-10">
         <h1 className="py-10 text-center">{snippet.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: snippet.renderedContent }} />
+        <div dangerouslySetInnerHTML={{ __html: snippet.html }} />
       </article>
     </Layout>
   )
