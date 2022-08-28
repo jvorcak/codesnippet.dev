@@ -6,4 +6,6 @@
     grid-template-rows: 2rem 1fr;
 
     @apply h-full w-full;
+
+    min-width: 200px;
 }

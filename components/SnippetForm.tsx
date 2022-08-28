@@ -158,6 +158,7 @@ const SnippetForm: FC<{
                   >
                     <option value="django">Django</option>
                     <option value="default">Default</option>
+                    <option value="triangle">Triangle</option>
                   </select>
                 </div>
               </div>
@@ -172,7 +173,7 @@ const SnippetForm: FC<{
                       Title
                     </label>
                     <input
-                      {...register(`codes.${index}.i`, {
+                      {...register(`codes.${index}.title`, {
                         required: true,
                       })}
                       type="text"
@@ -218,6 +219,7 @@ const SnippetForm: FC<{
                     {
                       i: newId,
                       lang: 'typescript',
+                      slug: '',
                       content: '',
                     },
                     { shouldFocus: true }
@@ -227,7 +229,7 @@ const SnippetForm: FC<{
                     x: 0,
                     y: 2,
                     w: 100,
-                    h: 200,
+                    h: 2,
                   })
                 }}
               >

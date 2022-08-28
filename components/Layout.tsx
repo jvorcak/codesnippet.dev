@@ -13,15 +13,8 @@ export type Theme = {
 }
 
 export const THEMES: Record<ThemeName, Theme> = {
-  django: {
-    background: 'bg-[url("/webscope.svg")] bg-fixed',
-    logo: 'text-[#166e4d]',
-    colors: {
-      primary: 'bg-[#166e4d] hover:bg-[#092E20]',
-    },
-  },
   default: {
-    background: 'bg-gradient-to-r from-cyan-500 to-blue-500',
+    background: 'bg-gray-200',
     logo: 'text-blue-500',
     colors: {
       primary: 'bg-blue-500',
@@ -35,11 +28,12 @@ const Layout: FC<{
   children: ReactChild | ReactChild[]
   theme?: ThemeName
   actions?: ReactChild | ReactChild[]
-}> = ({ children, theme: themeName, actions }) => {
-  const theme = THEMES[themeName ?? 'default']
+  className?: string
+}> = ({ children, className, theme: themeName, actions }) => {
+  const theme = THEMES['default']
   return (
     <ThemeContext.Provider value={theme}>
-      <div className={classNames('min-h-full', theme?.background)}>
+      <div className={classNames('min-h-full', className)}>
         <TopMenu theme={theme} />
         <div className="m-10 mx-auto grid max-w-5xl rounded-md sm:grid-cols-[100px_1fr_100px]">
           <div />

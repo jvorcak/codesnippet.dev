@@ -32,9 +32,9 @@ const ImageGridLayout = ({
         >
           {snippet.title}
         </div>
-        {snippet.codes?.map(({ lang, content, i }) => (
-          <div key={i}>
-            <CodeEditor snippet={content} />
+        {snippet.codes?.map((code) => (
+          <div key={code.i}>
+            <CodeEditor code={code} />
           </div>
         ))}
       </GridLayout>
